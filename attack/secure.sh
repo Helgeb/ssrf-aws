@@ -1,0 +1,1 @@
+aws ec2 modify-instance-metadata-options --instance-id $INSTANCE_ID --http-tokens required --http-endpoint enabled --region $AWS_REGION --profile $AWS_PROFILE
