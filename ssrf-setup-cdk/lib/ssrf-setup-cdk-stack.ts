@@ -29,7 +29,7 @@ export class SsrfSetupCdkStack extends cdk.Stack {
 
     instance.connections.allowFrom(
       ec2.Peer.ipv4(`${MY_IP}/32`),
-      ec2.Port.tcp(80),
+      ec2.Port.tcp(5000),
       "webtraffic"
     );
 
@@ -41,19 +41,11 @@ export class SsrfSetupCdkStack extends cdk.Stack {
 
     instance.addToRolePolicy(
       new iam.PolicyStatement({
-        actions: ["s3:ListBuckets"],
+        actions: ["s3:*"],
         effect: iam.Effect.ALLOW,
         resources: ["*"],
       })
     );
-
-    instance.addUserData("yum update -y");
-    // instance.addUserData("if ! [ -d './ssrf-aws' ]  ; then ")
-    // instance.addUserData("    git clone https://github.com/Helgeb/ssrf-aws.git")
-    // instance.addUserData("    python3 -m pip install ssrf-aws/server/requirements.txt")
-    // instance.addUserData("fi")
-    // instance.addUserData("cd ssrf-aws/server")
-    // instance.addUserData("python3 server.py")
 
     // new cr.AwsCustomResource(this, "InstanceMetadataOptions", {
     //   onUpdate: {
@@ -61,14 +53,16 @@ export class SsrfSetupCdkStack extends cdk.Stack {
     //     action: "modifyInstanceMetadataOptions",
     //     parameters: {
     //       InstanceId: instance.instanceId,
-    //       HttpEndpoint: 'enabled',
-    //       HttpTokens: 'required'
+    //       HttpEndpoint: "enabled",
+    //       HttpTokens: "required",
     //     },
     //     region: this.region,
     //     physicalResourceId: cr.PhysicalResourceId.of(instance.instanceId),
     //   },
     //   policy: cr.AwsCustomResourcePolicy.fromSdkCalls({
-    //     resources: [`arn:aws:ec2:${this.region}:${this.account}:instance/${instance.instanceId}`],
+    //     resources: [
+    //       `arn:aws:ec2:${this.region}:${this.account}:instance/${instance.instanceId}`,
+    //     ],
     //   }),
     // });
   }
